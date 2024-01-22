@@ -1,4 +1,4 @@
-
+import datetime
 
 def enregistrer_donnees_texte():
     with open("donnees.txt", "w") as fichier:
@@ -109,6 +109,25 @@ def remise_a_zero():
     argent_net = 0
     depenses_possibles = 0
 
+
+
+
+def calcul_objectif_argent():
+    global depenses_possibles
+
+    objectif = float(input("Combien d'argent souhaitez-vous mettre de côté ? "))
+    annee_estimation = int(input("Jusqu'à quelle année souhaitez-vous estimer vos économies ? "))
+
+    now = datetime.datetime.now()
+    mois_restants = (annee_estimation - now.year) * 12
+
+    montant_mensuel = objectif
+    argent_mis_de_cote = montant_mensuel * mois_restants
+
+    print(f"Si vous continuez à mettre de côté {montant_mensuel} € par mois, vous aurez environ {argent_mis_de_cote} € d'économies jusqu'à l'année {annee_estimation}.")
+
+
+
 def main():
     print("Bonjour et Bienvenue à toi")
 
@@ -116,6 +135,7 @@ def main():
         qsalaire_recu()
         if recu == "oui":
             informations()
+            calcul_objectif_argent()
         elif argent_net > 0:  
             print("D'accord, utilisons les informations que nous avons déjà.")
         else:

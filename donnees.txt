@@ -1,4 +1,4 @@
 Salaire: 1000.0
 Prélèvements: 50.0
-Argent Net: 0.0
-Depenses Possibles: 0.0
+Argent Net: 327.0
+Depenses Possibles: 327.0
