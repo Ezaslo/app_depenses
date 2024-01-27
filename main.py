@@ -1,18 +1,19 @@
 import datetime
-
 import json
 
-global argent_net
+argent_net = 0
+complement_revenu = 0
 prime = 0
 
 def enregistrer_donnees_texte():
-    global salaire,prime,prelevements_globaux, argent_net, depenses_possibles
+    global salaire,prime,prelevements_globaux, argent_net, depenses_possibles,complement_revenu
     donnees = {
         "salaire": salaire,
         "prelevements_globaux": prelevements_globaux,
         "argent_net": argent_net,
         "depenses_possibles": depenses_possibles,
-        "prime": prime
+        "prime": prime,
+        "complement_revenu": complement_revenu
     }
     with open("donnees.json", "w") as fichier:
         json.dump(donnees, fichier, indent=4)  
@@ -50,7 +51,10 @@ def menu_salaire():
         print("1. Entrer le salaire reçu")
         print("2. Entrer une prime reçue")
         print("3. Entrer un complement au salaire")
-        print("4. Corriger une erreur")
+        print("4. Corriger une erreur\n")
+
+        print(f"Vous avez {argent_net} € de disponilbe")
+
         try:
             
             choix = int(input("Choisissez une categorie"))
@@ -59,6 +63,11 @@ def menu_salaire():
                 salaire_reçu()
             elif choix ==2:
                 prime_reçue()
+            elif choix == 3:
+                complement()
+            elif choix == 4:
+                corriger_erreur()
+                
 
             else:
                 print("Vous devez entrer un nombre")
@@ -79,8 +88,27 @@ def prime_reçue():
     global argent_net
     
     prime =float(input("Combien avez-vous reçu ? :"))
-    print("prise en compte de votre prime")
+    print("prise en compte de votre prime...")
     argent_net = argent_net + prime
+    enregistrer_donnees_texte()
+
+def complement():
+    
+    global argent_net
+    global complement_revenu
+    
+    complement_revenu = float(input("Combien avez-vous eu en complement? :"))
+    print("prise en compte de votre complement..")
+    argent_net = argent_net + complement_revenu
+    enregistrer_donnees_texte()
+
+
+def corriger_erreur():
+    global argent_net
+    erreur = float(input("Combien voulez vous enlever à votre argent disponible : "))
+
+    argent_net = argent_net - erreur
+    print(f"vous avez donc {argent_net} € de disponilbe")
     enregistrer_donnees_texte()
 
 
@@ -213,12 +241,18 @@ def calcul_depenses():
 
 
 def remise_a_zero():
-    global salaire, prelevements, argent_net, depenses_possibles
+    global salaire,prime,prelevements_globaux, argent_net, depenses_possibles,complement_revenu,prelevements
 
     salaire = 0
     prelevements = 0
     argent_net = 0
     depenses_possibles = 0
+    prelevements_globaux = 0
+    complement_revenu = 0
+
+    print("Données réinitialisés bienvenue dans votre nouveau mois, ne depensez pas trop :)")
+
+    enregistrer_donnees_texte()
 
 
 
@@ -266,10 +300,11 @@ def menu():
         print("\nMenu Principal\n")
 
 
-        print("1. Entrer son salaire")
+        print("1. Entrées d'argent")
         print("2. Prélèvements")
-        print("2. Faire des prevision sur les economies")
-        print("3. Ajouter / Supprimer une depense")
+        print("3. Faire des prevision sur les economies")
+        print("4. Ajouter / Supprimer une depense")
+        print("5. Commencer un nouveau mois / Remise à zero")
 
         
 
@@ -283,6 +318,10 @@ def menu():
                 menu_prelevements()
             elif choix == 3:
                 calcul_objectif_argent()
+
+            
+            elif choix == 5:
+                remise_a_zero()
         except ValueError:
                 print("erreur entrez une donnée valide")
 
