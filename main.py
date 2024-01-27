@@ -2,16 +2,20 @@ import datetime
 
 import json
 
+global argent_net
+prime = 0
+
 def enregistrer_donnees_texte():
-    global salaire, prelevements_globaux, argent_net, depenses_possibles
+    global salaire,prime,prelevements_globaux, argent_net, depenses_possibles
     donnees = {
         "salaire": salaire,
         "prelevements_globaux": prelevements_globaux,
         "argent_net": argent_net,
-        "depenses_possibles": depenses_possibles
+        "depenses_possibles": depenses_possibles,
+        "prime": prime
     }
     with open("donnees.json", "w") as fichier:
-        json.dump(donnees, fichier, indent=4)  # Utilisez json.dump pour un formatage correct
+        json.dump(donnees, fichier, indent=4)  
 
 
 
@@ -30,34 +34,54 @@ def lire_donnees_texte():
         prelevements_globaux = []
         argent_net = 0
         depenses_possibles = 0
-        enregistrer_donnees_texte()  # Crée le fichier avec des données initiales
+        enregistrer_donnees_texte()  
     except json.JSONDecodeError:
         print("Erreur lors de la lecture des données. Format de fichier incorrect.")
-        # Vous pouvez choisir de réinitialiser le fichier ici si nécessaire
     except Exception as e:
         print(f"Une erreur s'est produite lors de la lecture du fichier : {e}")
 
 
 
-lire_donnees_texte()
-
-
-def qsalaire_recu():
-    global recu,salaire
-
+def menu_salaire():
+    
     while True:
+        print("\nMenu Salaire\n")
+
+        print("1. Entrer le salaire reçu")
+        print("2. Entrer une prime reçue")
+        print("3. Entrer un complement au salaire")
+        print("4. Corriger une erreur")
         try:
-            salaire = float(input("Combien as-tu reçu ? "))
-            if salaire < 0:
-                raise ValueError("Le salaire ne peut pas être négatif.")
-            break
+            
+            choix = int(input("Choisissez une categorie"))
+
+            if choix ==1:
+                salaire_reçu()
+            elif choix ==2:
+                prime_reçue()
+
+            else:
+                print("Vous devez entrer un nombre")
         except ValueError:
-            print("S'il te plaît, entre un montant valide pour le salaire.")
+            print("Entre une valeur correcte")
 
 
-    return recu
+def salaire_reçu():
+    global salaire
+    global argent_net
+    salaire =float(input("Combien avez-vous reçu ? :"))
+    print("prise en compte de votre salaire...")
+    argent_net = argent_net + salaire
+    enregistrer_donnees_texte()
 
-
+def prime_reçue():
+    global prime
+    global argent_net
+    
+    prime =float(input("Combien avez-vous reçu ? :"))
+    print("prise en compte de votre prime")
+    argent_net = argent_net + prime
+    enregistrer_donnees_texte()
 
 
 def menu_prelevements():
@@ -205,15 +229,14 @@ import datetime
 def calcul_objectif_argent():
     global depenses_possibles
 
-    while True:
-        reponse = input("Voulez-vous faire des prévisions sur vos économies ? (Oui/Non) : ").strip().lower()
     
-        if reponse == "oui":
-            while True:
-                reserves = float(input("combien avez vous deja de coté ?"))
+    
+    while True:
+                reserves = float(input("Combien avez vous déjà mis d'argent de coté ? "))
+                enregistrer_donnees_texte()
                 
                 try:
-                    objectif = float(input("Combien d'argent souhaitez-vous mettre de côté ? "))
+                    objectif = float(input("Combien d'argent souhaitez-vous mettre de côté en tout ? "))
                     if objectif < 0:
                         raise ValueError("L'objectif d'économie ne peut pas être négatif.")
 
@@ -226,24 +249,21 @@ def calcul_objectif_argent():
                     if mois_restants <= 0:
                         raise ValueError("Nombre de mois restants invalide.")
                     
-                    objectif = objectif - reserves
-                    montant_mensuel = objectif / mois_restants
+                    objectif2 = objectif - reserves
+                    montant_mensuel = objectif2 / mois_restants
                     argent_mis_de_cote = montant_mensuel * mois_restants
 
-                    print(f"Si vous mettez de coté {montant_mensuel:.2f} € par mois, vous aurez environ {argent_mis_de_cote:.2f} € d'économies jusqu'à l'année {annee_estimation}.")
+
+                    print(f"Si vous mettez de coté {montant_mensuel:.2f} € par mois, vous aurez environ {argent_mis_de_cote:.2f} € d'économies jusqu'à l'année {annee_estimation} ce qui vous permettra d'attendeindre votre objectif de {objectif} €.")
                     break
                 except ValueError as ve:
                     print(f"Erreur : {ve}")
                 except Exception as e:
                     print(f"Une erreur inattendue est survenue : {e}")
-            break
-        elif reponse == "non":
-            break
-        else:
-            print("Réponse invalide. Veuillez répondre par 'oui' ou 'non'.")
+
 def menu():
     while True:
-        print("Menu Principal \n")
+        print("\nMenu Principal\n")
 
 
         print("1. Entrer son salaire")
@@ -251,13 +271,13 @@ def menu():
         print("2. Faire des prevision sur les economies")
         print("3. Ajouter / Supprimer une depense")
 
-        #implementer le fait de demander a l'utilisateur estce qu'il a deja de l'argent de cote 
+        
 
     
         choix =float(input(""))
         try: 
             if choix == 1:
-                qsalaire_recu()
+                menu_salaire()
                 break
             elif choix == 2:
                 menu_prelevements()
@@ -268,7 +288,7 @@ def menu():
 
 
 def main():
-    print("Bonjour et Bienvenue à toi\n\n")
+    print("Bonjour et Bienvenue à toi\n")
     lire_donnees_texte()
     menu()
 

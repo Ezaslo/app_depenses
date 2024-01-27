@@ -1,6 +1,7 @@
 {
-    "salaire": 0,
+    "salaire": 1.0,
     "prelevements_globaux": [],
-    "argent_net": 0,
-    "depenses_possibles": 0
+    "argent_net": 3.0,
+    "depenses_possibles": 0,
+    "prime": 2.0
 }
