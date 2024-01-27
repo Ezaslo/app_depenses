@@ -210,6 +210,8 @@ def calcul_objectif_argent():
     
         if reponse == "oui":
             while True:
+                reserves = float(input("combien avez vous deja de coté ?"))
+                
                 try:
                     objectif = float(input("Combien d'argent souhaitez-vous mettre de côté ? "))
                     if objectif < 0:
@@ -223,7 +225,8 @@ def calcul_objectif_argent():
                     mois_restants = (annee_estimation - now.year) * 12
                     if mois_restants <= 0:
                         raise ValueError("Nombre de mois restants invalide.")
-
+                    
+                    objectif = objectif - reserves
                     montant_mensuel = objectif / mois_restants
                     argent_mis_de_cote = montant_mensuel * mois_restants
 
