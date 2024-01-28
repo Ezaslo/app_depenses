@@ -4,16 +4,21 @@ import json
 argent_net = 0
 complement_revenu = 0
 prime = 0
+depenses = 0
+argent_disponible = 0
+prelevements_globaux = []
 
 def enregistrer_donnees_texte():
-    global salaire,prime,prelevements_globaux, argent_net, depenses_possibles,complement_revenu
+    global salaire,prime,prelevements_globaux, argent_net, depenses_possibles,complement_revenu,depenses,argent_disponible
     donnees = {
         "salaire": salaire,
         "prelevements_globaux": prelevements_globaux,
         "argent_net": argent_net,
         "depenses_possibles": depenses_possibles,
         "prime": prime,
-        "complement_revenu": complement_revenu
+        "complement_revenu": complement_revenu,
+        "depenses":depenses,
+        "argent_disponible" : argent_disponible
     }
     with open("donnees.json", "w") as fichier:
         json.dump(donnees, fichier, indent=4)  
@@ -21,7 +26,7 @@ def enregistrer_donnees_texte():
 
 
 def lire_donnees_texte():
-    global salaire, prelevements_globaux, argent_net, depenses_possibles
+    global salaire, prelevements_globaux, argent_net, depenses_possibles, prime, complement_revenu, depenses,argent_disponible
     try:
         with open("donnees.json", "r") as fichier:
             donnees = json.load(fichier)
@@ -29,13 +34,22 @@ def lire_donnees_texte():
             prelevements_globaux = donnees.get("prelevements_globaux", [])
             argent_net = donnees.get("argent_net", 0)
             depenses_possibles = donnees.get("depenses_possibles", 0)
+            prime = donnees.get("prime", 0)
+            complement_revenu = donnees.get("complement_revenu", 0)
+            depenses = donnees.get("depenses", 0)
+            argent_disponible = donnees.get("argent_disponible", 0)
     except FileNotFoundError:
         print("Fichier de données introuvable. Création d'un nouveau fichier.")
+        # Initialiser toutes les variables à des valeurs par défaut
         salaire = 0
         prelevements_globaux = []
         argent_net = 0
         depenses_possibles = 0
-        enregistrer_donnees_texte()  
+        prime = 0
+        complement_revenu = 0
+        depenses = 0
+        argent_disponible = 0
+        enregistrer_donnees_texte()  # Appelle la fonction pour créer le fichier avec les valeurs par défaut
     except json.JSONDecodeError:
         print("Erreur lors de la lecture des données. Format de fichier incorrect.")
     except Exception as e:
@@ -44,35 +58,42 @@ def lire_donnees_texte():
 
 
 def menu_salaire():
-    
     while True:
         print("\nMenu Salaire\n")
-
         print("1. Entrer le salaire reçu")
         print("2. Entrer une prime reçue")
-        print("3. Entrer un complement au salaire")
-        print("4. Corriger une erreur\n")
-
-        print(f"Vous avez {argent_net} € de disponilbe")
+        print("3. Entrer un complément au salaire")
+        print("4. Corriger une erreur")
+        print("5. Quitter\n")
+        try:
+            # Utiliser directement calculer_argent_disponible() dans le print peut lever une exception si mal configuré
+            argent_dispo = calculer_argent_disponible()  
+            print(f"Vous avez {argent_dispo} € de disponible")
+        except Exception as e:
+            print(f"Une erreur est survenue lors du calcul de l'argent disponible: {e}")
+            # Option de gestion d'erreur, par exemple, continuer ou quitter
+            continue
 
         try:
-            
-            choix = int(input("Choisissez une categorie"))
-
-            if choix ==1:
-                salaire_reçu()
-            elif choix ==2:
-                prime_reçue()
-            elif choix == 3:
-                complement()
-            elif choix == 4:
-                corriger_erreur()
-                
-
-            else:
-                print("Vous devez entrer un nombre")
+            choix = int(input("Choisissez une catégorie : "))
         except ValueError:
-            print("Entre une valeur correcte")
+            print("Veuillez entrer un nombre valide.")
+            continue
+
+        if choix == 1:
+            salaire_reçu()
+        elif choix == 2:
+            prime_reçue()
+        elif choix == 3:
+            complement()
+        elif choix == 4:
+            corriger_erreur()
+        elif choix == 5:
+            print("Quitter le menu Salaire.")
+            break
+        else:
+            print("Option non valide, veuillez choisir un numéro entre 1 et 5.")
+
 
 
 def salaire_reçu():
@@ -81,6 +102,7 @@ def salaire_reçu():
     salaire =float(input("Combien avez-vous reçu ? :"))
     print("prise en compte de votre salaire...")
     argent_net = argent_net + salaire
+
     enregistrer_donnees_texte()
 
 def prime_reçue():
@@ -90,6 +112,7 @@ def prime_reçue():
     prime =float(input("Combien avez-vous reçu ? :"))
     print("prise en compte de votre prime...")
     argent_net = argent_net + prime
+    
     enregistrer_donnees_texte()
 
 def complement():
@@ -100,6 +123,7 @@ def complement():
     complement_revenu = float(input("Combien avez-vous eu en complement? :"))
     print("prise en compte de votre complement..")
     argent_net = argent_net + complement_revenu
+    
     enregistrer_donnees_texte()
 
 
@@ -109,6 +133,7 @@ def corriger_erreur():
 
     argent_net = argent_net - erreur
     print(f"vous avez donc {argent_net} € de disponilbe")
+    
     enregistrer_donnees_texte()
 
 
@@ -151,26 +176,33 @@ def menu_prelevements():
 
 
 
-prelevements_globaux = []
+
 
 def ajouter_prelevements():
     while True: 
         nom = input("Entrez le nom du prélèvement, appuyez sur 'q' pour quitter: ").lower()
         if nom == "q":
+            
             enregistrer_donnees_texte()
+
             break
         montant = input("Entrez le montant du prélèvement, appuyez sur 'q' pour quitter: ").lower()
         if montant == "q":
+            
             enregistrer_donnees_texte()
             break
         try:
             montant = float(montant)  # Assurez-vous que le montant est un nombre
             prelevements_globaux.append({'nom': nom, 'montant': montant})
+            
             enregistrer_donnees_texte()
             break
         except ValueError:
             print("Veuillez entrer un nombre valide pour le montant.")
+            
             enregistrer_donnees_texte()
+
+
 
 
 
@@ -179,6 +211,7 @@ def supprimer_prelevement(nom_prelevement):
     prelevements_globaux = [prelevement for prelevement in prelevements_globaux if prelevement['nom'] != nom_prelevement.lower()]
 
     print(f"Prélèvement '{nom_prelevement}' supprimé si existant.")
+
     enregistrer_donnees_texte()
 
 def afficher_prelevements():
@@ -196,7 +229,7 @@ def afficher_prelevements():
                     break
             except : 
                 print("")    
-        
+    
     enregistrer_donnees_texte()
     return  
 
@@ -206,37 +239,28 @@ def afficher_prelevements():
 
 
 def calcul_depenses():
-    global depenses_possibles, argent_net
-
-    depenses_possibles = argent_net
-
-    while depenses_possibles > 0:
-        print(f"Tu as {depenses_possibles} € ")
-
-        reponse = input("Combien as-tu dépensé ? (ou appuyez sur 'Q' pour quitter) : ").strip().lower()
-
-        if reponse == "q":
-            print("Fermeture de l'application.")
-            enregistrer_donnees_texte()
-            exit()
+    global argent_net, prelevements_globaux  # Pas besoin de 'argent_disponible' comme variable globale
+    
+    while True:
+        argent_disponible = calculer_argent_disponible()  # Calculez dynamiquement
+        print(f"Vous avez {argent_disponible} € de disponible.")
+        depense_input = input("Combien as-tu dépensé ? (Appuyez sur 'q' pour quitter) : ")
+        
+        if depense_input.lower() == "q":  
+            break  
 
         try:
-            depenses = float(reponse)
-            if depenses < 0:
-                raise ValueError("Les dépenses ne peuvent pas être négatives.")
-            if depenses > depenses_possibles:
-                raise ValueError("Tu ne peux pas dépenser plus que ce que tu as !")
-
-            depenses_possibles -= depenses
-            argent_net = depenses_possibles
-            enregistrer_donnees_texte()
-
-            if depenses_possibles <= 0:
-                print("Tu n'as plus d'argent.")
+            depense = float(depense_input)
+            if depense <= argent_disponible:  # Vérifiez si la dépense est possible
+                argent_net -= depense  # Appliquez la dépense
+                print(f"Après dépense, vous avez {calculer_argent_disponible()} € de disponible.")
                 enregistrer_donnees_texte()
+            else:
+                print("Dépense refusée. Vous n'avez pas assez d'argent disponible.")
+        except ValueError:  
+            print("Entrez une valeur valide ou 'q' pour quitter.")
 
-        except ValueError as e:
-            print(f"Erreur : {e}")
+
 
 
 
@@ -247,12 +271,18 @@ def remise_a_zero():
     prelevements = 0
     argent_net = 0
     depenses_possibles = 0
-    prelevements_globaux = 0
+    prelevements_globaux = []
     complement_revenu = 0
 
     print("Données réinitialisés bienvenue dans votre nouveau mois, ne depensez pas trop :)")
-
+    
     enregistrer_donnees_texte()
+
+def calculer_argent_disponible():
+    global argent_net, prelevements_globaux
+    total_prelevements = sum(prelevement['montant'] for prelevement in prelevements_globaux)
+    argent_disponible = argent_net - total_prelevements
+    return argent_disponible
 
 
 
@@ -313,11 +343,15 @@ def menu():
         try: 
             if choix == 1:
                 menu_salaire()
-                break
+                
             elif choix == 2:
                 menu_prelevements()
+                
             elif choix == 3:
                 calcul_objectif_argent()
+            elif choix == 4:
+                
+                calcul_depenses()
 
             
             elif choix == 5:
