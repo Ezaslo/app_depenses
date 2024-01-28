@@ -99,108 +99,160 @@ def menu_salaire():
 def salaire_reçu():
     global salaire
     global argent_net
-    salaire =float(input("Combien avez-vous reçu ? :"))
-    print("prise en compte de votre salaire...")
-    argent_net = argent_net + salaire
+    while True:
+        try:
+            salaire_input = input("Combien avez-vous reçu ? :")
+            salaire_temp = float(salaire_input)  # Tente de convertir l'entrée en float
+            if salaire_temp < 0:
+                print("Le montant du salaire ne peut pas être négatif. Veuillez entrer un montant valide.")
+                continue
+            salaire = salaire_temp
+            break  # Sortie de la boucle si la conversion est réussie et le salaire est positif
+        except ValueError:
+            print("Veuillez entrer un nombre valide. Par exemple, 2500.50")
+            # La boucle continue, demandant à l'utilisateur de réessayer
 
-    enregistrer_donnees_texte()
+    print("Prise en compte de votre salaire...")
+    argent_net += salaire  # Met à jour argent_net avec le nouveau salaire
+
+    enregistrer_donnees_texte()  # Sauvegarde les données après la mise à jour
+
 
 def prime_reçue():
     global prime
     global argent_net
-    
-    prime =float(input("Combien avez-vous reçu ? :"))
-    print("prise en compte de votre prime...")
-    argent_net = argent_net + prime
-    
-    enregistrer_donnees_texte()
+
+    while True:
+        try:
+            prime_input = input("Combien avez-vous reçu en prime ? :")
+            prime_temp = float(prime_input)  # Essaie de convertir l'entrée en float
+            if prime_temp < 0:
+                print("Le montant de la prime ne peut pas être négatif. Veuillez entrer un montant valide.")
+                continue
+            prime = prime_temp
+            break  # Sortie de la boucle si la conversion est réussie et la prime est positive
+        except ValueError:
+            print("Veuillez entrer un nombre valide. Par exemple, 500.00")
+            # La boucle continue, demandant à l'utilisateur de réessayer
+
+    print("Prise en compte de votre prime...")
+    argent_net += prime  # Met à jour argent_net avec la nouvelle prime
+
+    enregistrer_donnees_texte()  # Sauvegarde les données après la mise à jour
 
 def complement():
-    
     global argent_net
     global complement_revenu
-    
-    complement_revenu = float(input("Combien avez-vous eu en complement? :"))
-    print("prise en compte de votre complement..")
-    argent_net = argent_net + complement_revenu
-    
-    enregistrer_donnees_texte()
+
+    while True:
+        try:
+            complement_input = input("Combien avez-vous eu en complément ? :")
+            complement_temp = float(complement_input)  # Essaie de convertir l'entrée en float
+            if complement_temp < 0:
+                print("Le montant du complément ne peut pas être négatif. Veuillez entrer un montant valide.")
+                continue
+            complement_revenu = complement_temp
+            break  # Sortie de la boucle si la conversion est réussie et le complément est positif
+        except ValueError:
+            print("Veuillez entrer un nombre valide. Par exemple, 300.00")
+            # La boucle continue, demandant à l'utilisateur de réessayer
+
+    print("Prise en compte de votre complément...")
+    argent_net += complement_revenu  # Met à jour argent_net avec le nouveau complément
+
+    enregistrer_donnees_texte()  # Sauvegarde les données après la mise à jour
+
 
 
 def corriger_erreur():
     global argent_net
-    erreur = float(input("Combien voulez vous enlever à votre argent disponible : "))
 
-    argent_net = argent_net - erreur
-    print(f"vous avez donc {argent_net} € de disponilbe")
-    
+    while True:
+        try:
+            erreur_input = input("Combien voulez-vous enlever à votre argent disponible ? : ")
+            erreur = float(erreur_input)
+            argent_disponible_apres_prelevements = calculer_argent_disponible()
+
+            if erreur < 0:
+                print("Le montant ne peut pas être négatif. Veuillez entrer un montant valide.")
+            elif erreur > argent_disponible_apres_prelevements:
+                print(f"Le montant ne peut pas dépasser votre argent disponible après prélèvements, qui est de {argent_disponible_apres_prelevements} €.")
+            else:
+                break  # Sortie de la boucle si l'entrée est valide
+        except ValueError:
+            print("Veuillez entrer un nombre valide.")
+
+    argent_net -= erreur  # Applique la correction
+    print(f"Vous avez donc {calculer_argent_disponible()} € disponible après cette correction.")
+
     enregistrer_donnees_texte()
 
 
-def menu_prelevements():
-    
-    
-    
-    while True:
-        print("Menu des prelevements\n")
 
-        print("1. AJouter un prélèvement")
+def menu_prelevements():
+    while True:
+        print("\nMenu des prélèvements\n")
+        print("1. Ajouter un prélèvement")
         print("2. Supprimer un prélèvement")
-        print("3. Voir les prélèvement")
+        print("3. Voir les prélèvements")
         print("4. Retour au menu principal")
-        choix = (input(""))
-        try : 
-            choix =int(choix)
+
+        choix = input("Choisissez une option : ")
+
+        try:
+            choix = int(choix)
 
             if choix == 1:
                 ajouter_prelevements()
-        
-
             elif choix == 2:
-                nom_prelevement = input("Entrez le nom exact du prélèvement ue vous voulez supprimer ou entrez 'q' pour quitter : ")
-                if nom_prelevement == "q":
-                    print("Retour au menu...")
+                nom_prelevement = input("Entrez le nom exact du prélèvement que vous voulez supprimer ou entrez 'q' pour quitter : ")
+                if nom_prelevement.lower() == "q":
+                    print("Retour au menu principal...")
                 else:
                     supprimer_prelevement(nom_prelevement)
-
             elif choix == 3:
                 afficher_prelevements()
-            
             elif choix == 4:
+                print("Retour au menu principal...")
                 break
+            else:
+                print("Option non valide. Veuillez choisir un nombre entre 1 et 4.")
+        except ValueError:
+            print("Erreur : Vous devez entrer un nombre. Veuillez réessayer.")
 
-            else :
-                print("Erreur : Vous devez choisir un nombre entre 1 et 4 ")
-        except ValueError: 
-            print("Erreur : Vous devez entrer un chiffre")
 
 
 
 
 
 def ajouter_prelevements():
-    while True: 
-        nom = input("Entrez le nom du prélèvement, appuyez sur 'q' pour quitter: ").lower()
+    while True:
+        nom = input("Entrez le nom du prélèvement ou 'q' pour quitter : ").strip().lower()
+        
         if nom == "q":
-            
-            enregistrer_donnees_texte()
-
+            print("Retour au menu précédent...")
             break
-        montant = input("Entrez le montant du prélèvement, appuyez sur 'q' pour quitter: ").lower()
-        if montant == "q":
-            
-            enregistrer_donnees_texte()
+        
+        montant_str = input("Entrez le montant du prélèvement ou 'q' pour quitter : ").strip().lower()
+        
+        if montant_str == "q":
+            print("Retour au menu précédent...")
             break
+        
         try:
-            montant = float(montant)  # Assurez-vous que le montant est un nombre
-            prelevements_globaux.append({'nom': nom, 'montant': montant})
+            montant = float(montant_str)
             
+            if montant < 0:
+                print("Le montant du prélèvement ne peut pas être négatif. Réessayez.")
+                continue  # Redémarre la boucle pour permettre une nouvelle entrée
+                
+            prelevements_globaux.append({'nom': nom, 'montant': montant})
+            print(f"Prélèvement '{nom}' de {montant} € ajouté avec succès.")
             enregistrer_donnees_texte()
             break
+        
         except ValueError:
-            print("Veuillez entrer un nombre valide pour le montant.")
-            
-            enregistrer_donnees_texte()
+            print("Veuillez entrer un montant valide (nombre). Réessayez.")
 
 
 
@@ -208,11 +260,18 @@ def ajouter_prelevements():
 
 def supprimer_prelevement(nom_prelevement):
     global prelevements_globaux
+    prelevements_avant = prelevements_globaux.copy()  # Crée une copie de la liste actuelle
+
+    # Utilise une liste en compréhension pour supprimer le prélèvement avec le nom spécifié
     prelevements_globaux = [prelevement for prelevement in prelevements_globaux if prelevement['nom'] != nom_prelevement.lower()]
 
-    print(f"Prélèvement '{nom_prelevement}' supprimé si existant.")
+    # Vérifie si des prélèvements ont été supprimés
+    if len(prelevements_avant) == len(prelevements_globaux):
+        print(f"Aucun prélèvement avec le nom '{nom_prelevement}' trouvé.")
+    else:
+        print(f"Prélèvement '{nom_prelevement}' supprimé si existant.")
+        enregistrer_donnees_texte()
 
-    enregistrer_donnees_texte()
 
 def afficher_prelevements():
     if prelevements_globaux:
@@ -222,16 +281,7 @@ def afficher_prelevements():
     else:
         print("\nAucun prélèvement n'a été ajouté.")
 
-    while True :
-            try :  
-                reponse = input("\nAppuyez sur 'q' pour quitter : ").lower()
-                if reponse == "q":
-                    break
-            except : 
-                print("")    
-    
-    enregistrer_donnees_texte()
-    return  
+    input("\nAppuyez sur Entrée pour continuer...")
 
 
     
@@ -263,20 +313,19 @@ def calcul_depenses():
 
 
 
-
 def remise_a_zero():
-    global salaire,prime,prelevements_globaux, argent_net, depenses_possibles,complement_revenu,prelevements
+    global salaire, prime, argent_net, depenses_possibles, prelevements_globaux, complement_revenu
 
     salaire = 0
-    prelevements = 0
     argent_net = 0
     depenses_possibles = 0
     prelevements_globaux = []
     complement_revenu = 0
 
-    print("Données réinitialisés bienvenue dans votre nouveau mois, ne depensez pas trop :)")
-    
+    print("Données réinitialisées. Bienvenue dans votre nouveau mois, ne dépensez pas trop :)")
+
     enregistrer_donnees_texte()
+
 
 def calculer_argent_disponible():
     global argent_net, prelevements_globaux
@@ -290,74 +339,74 @@ def calculer_argent_disponible():
 
 import datetime
 
+import datetime
+
 def calcul_objectif_argent():
-    global depenses_possibles
-
-    
-    
     while True:
-                reserves = float(input("Combien avez vous déjà mis d'argent de coté ? "))
-                enregistrer_donnees_texte()
-                
-                try:
-                    objectif = float(input("Combien d'argent souhaitez-vous mettre de côté en tout ? "))
-                    if objectif < 0:
-                        raise ValueError("L'objectif d'économie ne peut pas être négatif.")
+        try:
+            reserves = float(input("Combien avez-vous déjà mis d'argent de côté ? "))
+            if reserves < 0:
+                raise ValueError("Le montant des réserves ne peut pas être négatif.")
 
-                    annee_estimation = int(input("Jusqu'à quelle année souhaitez-vous estimer vos économies ? "))
-                    now = datetime.datetime.now()
-                    if annee_estimation <= now.year:
-                        raise ValueError("L'année d'estimation doit être dans le futur.")
+            objectif = float(input("Combien d'argent souhaitez-vous mettre de côté au total ? "))
+            if objectif < 0:
+                raise ValueError("L'objectif d'économie ne peut pas être négatif.")
 
-                    mois_restants = (annee_estimation - now.year) * 12
-                    if mois_restants <= 0:
-                        raise ValueError("Nombre de mois restants invalide.")
-                    
-                    objectif2 = objectif - reserves
-                    montant_mensuel = objectif2 / mois_restants
-                    argent_mis_de_cote = montant_mensuel * mois_restants
+            annee_estimation = int(input("Jusqu'à quelle année souhaitez-vous estimer vos économies ? "))
+            now = datetime.datetime.now()
+            if annee_estimation <= now.year:
+                raise ValueError("L'année d'estimation doit être dans le futur.")
 
+            mois_restants = (annee_estimation - now.year) * 12
+            if mois_restants <= 0:
+                raise ValueError("Nombre de mois restants invalide.")
 
-                    print(f"Si vous mettez de coté {montant_mensuel:.2f} € par mois, vous aurez environ {argent_mis_de_cote:.2f} € d'économies jusqu'à l'année {annee_estimation} ce qui vous permettra d'attendeindre votre objectif de {objectif} €.")
-                    break
-                except ValueError as ve:
-                    print(f"Erreur : {ve}")
-                except Exception as e:
-                    print(f"Une erreur inattendue est survenue : {e}")
+            objectif_restant = objectif - reserves
+            montant_mensuel = objectif_restant / mois_restants
+            argent_mis_de_cote = montant_mensuel * mois_restants
+
+            print(f"Pour atteindre votre objectif de {objectif} € d'ici l'année {annee_estimation},")
+            print(f"avec {reserves} € déjà mis de côté, vous devez économiser environ {montant_mensuel:.2f} € par mois.")
+            print(f"Cela vous permettra d'avoir environ {argent_mis_de_cote:.2f} € d'économies.")
+            break
+        except ValueError as ve:
+            print(f"Erreur : {ve}")
+        except Exception as e:
+            print(f"Une erreur inattendue est survenue : {e}")
+
 
 def menu():
     while True:
         print("\nMenu Principal\n")
+        print("Options :")
+        print("1. Gérer les entrées d'argent")
+        print("2. Gérer les prélèvements")
+        print("3. Calculer des prévisions d'économies")
+        print("4. Ajouter ou supprimer une dépense")
+        print("5. Commencer un nouveau mois / Remise à zéro")
+        print("0. Quitter le programme\n")
 
+        argent_dispo = calculer_argent_disponible()  
+        print(f"Vous avez {argent_dispo} € de disponible")
 
-        print("1. Entrées d'argent")
-        print("2. Prélèvements")
-        print("3. Faire des prevision sur les economies")
-        print("4. Ajouter / Supprimer une depense")
-        print("5. Commencer un nouveau mois / Remise à zero")
-
+        choix = input("Sélectionnez une option en entrant le numéro correspondant : ")
         
+        if choix == "0":
+            print("Merci d'avoir utilisé le programme. Au revoir !")
+            break
+        elif choix == "1":
+            menu_salaire()
+        elif choix == "2":
+            menu_prelevements()
+        elif choix == "3":
+            calcul_objectif_argent()
+        elif choix == "4":
+            calcul_depenses()
+        elif choix == "5":
+            remise_a_zero()
+        else:
+            print("Option non valide. Veuillez choisir une option valide (1-5) ou 0 pour quitter.")
 
-    
-        choix =float(input(""))
-        try: 
-            if choix == 1:
-                menu_salaire()
-                
-            elif choix == 2:
-                menu_prelevements()
-                
-            elif choix == 3:
-                calcul_objectif_argent()
-            elif choix == 4:
-                
-                calcul_depenses()
-
-            
-            elif choix == 5:
-                remise_a_zero()
-        except ValueError:
-                print("erreur entrez une donnée valide")
 
 
 def main():

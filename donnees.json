@@ -1,5 +1,5 @@
 {
-    "salaire": 1000.0,
+    "salaire": 1500.0,
     "prelevements_globaux": [
         {
             "nom": "enzo",
@@ -8,11 +8,15 @@
         {
             "nom": "e",
             "montant": 100.0
+        },
+        {
+            "nom": "enzo",
+            "montant": 50.0
         }
     ],
-    "argent_net": 126.0,
+    "argent_net": 4126.0,
     "depenses_possibles": 0,
-    "prime": 10.0,
+    "prime": 2500.0,
     "complement_revenu": 10.0,
     "depenses": 0,
     "argent_disponible": 0
