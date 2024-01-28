@@ -1,12 +1,12 @@
 {
-    "salaire": 0,
+    "salaire": 1000.0,
     "prelevements_globaux": [],
-    "argent_net": 0,
+    "argent_net": 795.0,
     "depenses_possibles": 0,
     "prime": 0,
     "complement_revenu": 0,
     "depenses": 0,
     "argent_disponible": 0,
-    "reserves": 0,
-    "reserves_input": 0
+    "reserves": 205.0,
+    "reserves_input": 50.0
 }

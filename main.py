@@ -1,13 +1,17 @@
 import datetime
 import json
 
-argent_net = 0
-complement_revenu = 0
+salaire = 0
 prime = 0
+complement_revenu = 0
 depenses = 0
-argent_disponible = 0
+argent_net = 0
 prelevements_globaux = []
 reserves_input = 0
+reserves = 0  
+retrait = 0
+reserves_inputneg = 0
+reserves_inputpos = 0
 
 
 def enregistrer_donnees_texte():
@@ -335,8 +339,11 @@ def remise_a_zero():
 
 def calculer_argent_disponible():
     global argent_net, prelevements_globaux, reserves_input
+
     total_prelevements = sum(prelevement['montant'] for prelevement in prelevements_globaux)
-    argent_disponible = argent_net - total_prelevements - reserves_input
+    argent_disponible = argent_net - total_prelevements 
+
+
     return argent_disponible
 
 
@@ -381,7 +388,7 @@ def calcul_objectif_argent():
             print(f"Une erreur inattendue est survenue : {e}")
 
 def reserves_argent():
-    global reserves, argent_disponible, reserves_input
+    global reserves, argent_disponible,reserves_input,argent_net
     
     print(f"Vous avez {reserves} € de côté.")
     
@@ -396,24 +403,28 @@ def reserves_argent():
             break
         elif action == '1':
             try:
-                reserves_input += float(input("Combien d'argent voulez-vous mettre de côté ce mois-ci : "))
-                reserves += reserves_input
-                argent_disponible -= reserves_input  # Met à jour l'argent disponible après l'ajout
+                reserves_input = float(input("Combien d'argent voulez-vous mettre de côté ce mois-ci : "))
+                
+                reserves = reserves + reserves_input
+                argent_net = argent_net - reserves_input
+            
                 print(f"Votre nouveau solde de côté est de {reserves} €.")
                 enregistrer_donnees_texte()
+                reserves_input = 0
             except ValueError:
                 print("Erreur : Veuillez entrer un montant valide.")
+
+
         elif action == '2':
             try:
-                retrait = float(input("Combien d'argent voulez-vous retirer : "))
-                if retrait <= reserves:
-                    reserves_input -= retrait
-                    reserves -= retrait
-                    argent_disponible += retrait  # Met à jour l'argent disponible après le retrait
-                    print(f"Vous avez retiré {retrait} €. Votre nouveau solde de côté est de {reserves} €.")
-                    enregistrer_donnees_texte()
-                else:
-                    print("Vous n'avez pas suffisamment d'argent en réserve.")
+                reserves_input = float(input("Combien d'argent voulez-vous retirer: "))
+                
+                reserves = reserves - reserves_input
+                argent_net = argent_net + reserves_input
+            
+                print(f"Votre nouveau solde de côté est de {reserves} €.")
+                enregistrer_donnees_texte()
+                
             except ValueError:
                 print("Erreur : Veuillez entrer un montant valide.")
 
