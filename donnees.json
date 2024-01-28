@@ -1,23 +1,11 @@
 {
-    "salaire": 1500.0,
-    "prelevements_globaux": [
-        {
-            "nom": "enzo",
-            "montant": 25.0
-        },
-        {
-            "nom": "e",
-            "montant": 100.0
-        },
-        {
-            "nom": "enzo",
-            "montant": 50.0
-        }
-    ],
-    "argent_net": 4126.0,
+    "salaire": 1000.0,
+    "prelevements_globaux": [],
+    "argent_net": 1000.0,
     "depenses_possibles": 0,
     "prime": 2500.0,
-    "complement_revenu": 10.0,
+    "complement_revenu": 0,
     "depenses": 0,
-    "argent_disponible": 0
+    "argent_disponible": 0,
+    "reserves": 0
 }

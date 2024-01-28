@@ -7,10 +7,11 @@ prime = 0
 depenses = 0
 argent_disponible = 0
 prelevements_globaux = []
+reserves_input = 0
 
 
 def enregistrer_donnees_texte():
-    global salaire,prime,prelevements_globaux, argent_net, depenses_possibles,complement_revenu,depenses,argent_disponible,reserves
+    global salaire, prime, prelevements_globaux, argent_net, depenses_possibles, complement_revenu, depenses, argent_disponible, reserves, reserves_input
     donnees = {
         "salaire": salaire,
         "prelevements_globaux": prelevements_globaux,
@@ -18,17 +19,18 @@ def enregistrer_donnees_texte():
         "depenses_possibles": depenses_possibles,
         "prime": prime,
         "complement_revenu": complement_revenu,
-        "depenses":depenses,
-        "argent_disponible" : argent_disponible,
-        "reserves" : reserves
+        "depenses": depenses,
+        "argent_disponible": argent_disponible,
+        "reserves": reserves,
+        "reserves_input": reserves_input  # Ajout de la variable reserves_input
     }
     with open("donnees.json", "w") as fichier:
-        json.dump(donnees, fichier, indent=4)  
+        json.dump(donnees, fichier, indent=4)
 
 
 
 def lire_donnees_texte():
-    global salaire, prelevements_globaux, argent_net, depenses_possibles, prime, complement_revenu, depenses,argent_disponible,reserves
+    global salaire, prelevements_globaux, argent_net, depenses_possibles, prime, complement_revenu, depenses, argent_disponible, reserves
     try:
         with open("donnees.json", "r") as fichier:
             donnees = json.load(fichier)
@@ -40,7 +42,7 @@ def lire_donnees_texte():
             complement_revenu = donnees.get("complement_revenu", 0)
             depenses = donnees.get("depenses", 0)
             argent_disponible = donnees.get("argent_disponible", 0)
-            reserves = donnees.get("reserves",0)
+            reserves = donnees.get("reserves", 0)
     except FileNotFoundError:
         print("Fichier de données introuvable. Création d'un nouveau fichier.")
         # Initialiser toutes les variables à des valeurs par défaut
@@ -332,9 +334,9 @@ def remise_a_zero():
 
 
 def calculer_argent_disponible():
-    global argent_net, prelevements_globaux
+    global argent_net, prelevements_globaux, reserves_input
     total_prelevements = sum(prelevement['montant'] for prelevement in prelevements_globaux)
-    argent_disponible = argent_net - total_prelevements
+    argent_disponible = argent_net - total_prelevements - reserves_input
     return argent_disponible
 
 
@@ -379,7 +381,8 @@ def calcul_objectif_argent():
             print(f"Une erreur inattendue est survenue : {e}")
 
 def reserves_argent():
-    global reserves
+    global reserves, argent_disponible, reserves_input
+    
     print(f"Vous avez {reserves} € de côté.")
     
     while True:
@@ -393,23 +396,25 @@ def reserves_argent():
             break
         elif action == '1':
             try:
-                reserves_input = float(input("Combien d'argent voulez-vous mettre de côté ce mois-ci : "))
+                reserves_input += float(input("Combien d'argent voulez-vous mettre de côté ce mois-ci : "))
                 reserves += reserves_input
-                print(f"Votre nouveau solde est de {reserves} €.")
+                argent_disponible -= reserves_input  # Met à jour l'argent disponible après l'ajout
+                print(f"Votre nouveau solde de côté est de {reserves} €.")
             except ValueError:
                 print("Erreur : Veuillez entrer un montant valide.")
         elif action == '2':
             try:
                 retrait = float(input("Combien d'argent voulez-vous retirer : "))
                 if retrait <= reserves:
+                    reserves_input -= retrait
                     reserves -= retrait
-                    print(f"Vous avez retiré {retrait} €. Votre nouveau solde est de {reserves} €.")
+                    argent_disponible += retrait  # Met à jour l'argent disponible après le retrait
+                    print(f"Vous avez retiré {retrait} €. Votre nouveau solde de côté est de {reserves} €.")
                 else:
                     print("Vous n'avez pas suffisamment d'argent en réserve.")
             except ValueError:
                 print("Erreur : Veuillez entrer un montant valide.")
-        else:
-            print("Option non valide. Veuillez choisir une option valide.")
+
 
 
 
@@ -458,4 +463,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+    #a faire : corriger erreur enregistrement de quand je met de sous de cote
 
