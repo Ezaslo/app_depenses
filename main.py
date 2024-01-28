@@ -8,8 +8,9 @@ depenses = 0
 argent_disponible = 0
 prelevements_globaux = []
 
+
 def enregistrer_donnees_texte():
-    global salaire,prime,prelevements_globaux, argent_net, depenses_possibles,complement_revenu,depenses,argent_disponible
+    global salaire,prime,prelevements_globaux, argent_net, depenses_possibles,complement_revenu,depenses,argent_disponible,reserves
     donnees = {
         "salaire": salaire,
         "prelevements_globaux": prelevements_globaux,
@@ -18,7 +19,8 @@ def enregistrer_donnees_texte():
         "prime": prime,
         "complement_revenu": complement_revenu,
         "depenses":depenses,
-        "argent_disponible" : argent_disponible
+        "argent_disponible" : argent_disponible,
+        "reserves" : reserves
     }
     with open("donnees.json", "w") as fichier:
         json.dump(donnees, fichier, indent=4)  
@@ -26,7 +28,7 @@ def enregistrer_donnees_texte():
 
 
 def lire_donnees_texte():
-    global salaire, prelevements_globaux, argent_net, depenses_possibles, prime, complement_revenu, depenses,argent_disponible
+    global salaire, prelevements_globaux, argent_net, depenses_possibles, prime, complement_revenu, depenses,argent_disponible,reserves
     try:
         with open("donnees.json", "r") as fichier:
             donnees = json.load(fichier)
@@ -38,6 +40,7 @@ def lire_donnees_texte():
             complement_revenu = donnees.get("complement_revenu", 0)
             depenses = donnees.get("depenses", 0)
             argent_disponible = donnees.get("argent_disponible", 0)
+            reserves = donnees.get("reserves",0)
     except FileNotFoundError:
         print("Fichier de données introuvable. Création d'un nouveau fichier.")
         # Initialiser toutes les variables à des valeurs par défaut
@@ -49,6 +52,7 @@ def lire_donnees_texte():
         complement_revenu = 0
         depenses = 0
         argent_disponible = 0
+        reserves = 0
         enregistrer_donnees_texte()  # Appelle la fonction pour créer le fichier avec les valeurs par défaut
     except json.JSONDecodeError:
         print("Erreur lors de la lecture des données. Format de fichier incorrect.")
@@ -374,6 +378,41 @@ def calcul_objectif_argent():
         except Exception as e:
             print(f"Une erreur inattendue est survenue : {e}")
 
+def reserves_argent():
+    global reserves
+    print(f"Vous avez {reserves} € de côté.")
+    
+    while True:
+        action = input("Que voulez-vous faire?\n"
+                       "1. Ajouter de l'argent\n"
+                       "2. Retirer de l'argent\n"
+                       "q. Quitter\n"
+                       "Choisissez une option : ")
+        
+        if action == 'q':
+            break
+        elif action == '1':
+            try:
+                reserves_input = float(input("Combien d'argent voulez-vous mettre de côté ce mois-ci : "))
+                reserves += reserves_input
+                print(f"Votre nouveau solde est de {reserves} €.")
+            except ValueError:
+                print("Erreur : Veuillez entrer un montant valide.")
+        elif action == '2':
+            try:
+                retrait = float(input("Combien d'argent voulez-vous retirer : "))
+                if retrait <= reserves:
+                    reserves -= retrait
+                    print(f"Vous avez retiré {retrait} €. Votre nouveau solde est de {reserves} €.")
+                else:
+                    print("Vous n'avez pas suffisamment d'argent en réserve.")
+            except ValueError:
+                print("Erreur : Veuillez entrer un montant valide.")
+        else:
+            print("Option non valide. Veuillez choisir une option valide.")
+
+
+
 
 def menu():
     while True:
@@ -384,6 +423,7 @@ def menu():
         print("3. Calculer des prévisions d'économies")
         print("4. Ajouter ou supprimer une dépense")
         print("5. Commencer un nouveau mois / Remise à zéro")
+        print("6. Ajouter / Supprimer de l'argent de côté")
         print("0. Quitter le programme\n")
 
         argent_dispo = calculer_argent_disponible()  
@@ -404,6 +444,8 @@ def menu():
             calcul_depenses()
         elif choix == "5":
             remise_a_zero()
+        elif choix == "6":
+            reserves_argent()
         else:
             print("Option non valide. Veuillez choisir une option valide (1-5) ou 0 pour quitter.")
 
