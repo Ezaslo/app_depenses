@@ -400,6 +400,7 @@ def reserves_argent():
                 reserves += reserves_input
                 argent_disponible -= reserves_input  # Met à jour l'argent disponible après l'ajout
                 print(f"Votre nouveau solde de côté est de {reserves} €.")
+                enregistrer_donnees_texte()
             except ValueError:
                 print("Erreur : Veuillez entrer un montant valide.")
         elif action == '2':
@@ -410,6 +411,7 @@ def reserves_argent():
                     reserves -= retrait
                     argent_disponible += retrait  # Met à jour l'argent disponible après le retrait
                     print(f"Vous avez retiré {retrait} €. Votre nouveau solde de côté est de {reserves} €.")
+                    enregistrer_donnees_texte()
                 else:
                     print("Vous n'avez pas suffisamment d'argent en réserve.")
             except ValueError:
