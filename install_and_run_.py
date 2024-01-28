@@ -21,7 +21,7 @@ urllib.request.urlretrieve(github_main_url, os.path.join(download_path, 'main.py
 
 # Téléchargez le fichier JSON depuis GitHub (si applicable)
 if github_json_url:
-    urllib.request.urlretrieve(github_json_url, os.path.join(download_path, 'votre_fichier.json'))
+    urllib.request.urlretrieve(github_json_url, os.path.join(download_path, 'donnees.json'))
 
 # Installez PyInstaller
 subprocess.call(['pip', 'install', 'pyinstaller'])
@@ -39,3 +39,6 @@ desktop_path = os.path.join(os.path.expanduser('~'), 'Desktop')
 shutil.copy2(executable_path, desktop_path)
 
 print("Installation terminée et l'exécutable est sur le bureau !")
+
+# Ajoutez cette ligne pour maintenir la console ouverte
+input("Appuyez sur Entrée pour quitter...")
