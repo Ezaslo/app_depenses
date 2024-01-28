@@ -4,24 +4,15 @@ import urllib.request
 import json
 import shutil
 
-# Nom de la branche GitHub où se trouve main.py
-branch_name = 'V2'
+# URL de votre fichier main.py dans la branche spécifique
+github_main_url = 'https://raw.githubusercontent.com/Ezaslo/app_depenses/V2/main.py'
 
 # Chemin où le code sera téléchargé
-download_path = os.path.expanduser('C:')
+download_path = os.path.expanduser('~')
 
-# Construisez l'URL de votre fichier main.py dans la branche spécifique
-github_main_url = f'https://github.com/Ezaslo/app_depenses.git/{branch_name}/main.py'
-
-# URL de votre dépôt GitHub pour le fichier JSON (si applicable)
-github_json_url = f'https://github.com/Ezaslo/app_depenses.git/{branch_name}/donnees.json'
 
 # Téléchargez main.py depuis GitHub
 urllib.request.urlretrieve(github_main_url, os.path.join(download_path, 'main.py'))
-
-# Téléchargez le fichier JSON depuis GitHub (si applicable)
-if github_json_url:
-    urllib.request.urlretrieve(github_json_url, os.path.join(download_path, 'donnees.json'))
 
 # Installez PyInstaller
 subprocess.call(['pip', 'install', 'pyinstaller'])
@@ -42,3 +33,4 @@ print("Installation terminée et l'exécutable est sur le bureau !")
 
 # Ajoutez cette ligne pour maintenir la console ouverte
 input("Appuyez sur Entrée pour quitter...")
+
