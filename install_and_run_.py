@@ -19,7 +19,7 @@ download_path = os.path.expanduser('~')
 urllib.request.urlretrieve(github_main_url, os.path.join(download_path, 'main.py'))
 
 # Répertoire d'installation de l'application modifié
-install_path = "C:/programmes/app"
+install_path = "C:/programmes/Anselmo Studio"
 
 # Créez le répertoire d'installation s'il n'existe pas
 if not os.path.exists(install_path):
