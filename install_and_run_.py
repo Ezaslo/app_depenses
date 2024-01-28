@@ -36,7 +36,7 @@ subprocess.call(['pyinstaller', '--onefile', '--distpath', install_path, main_py
 
 # Créez un raccourci sur le bureau de l'utilisateur
 desktop = Path(os.path.join(os.path.expanduser('~'), 'Desktop'))
-shortcut_path = desktop / 'app.lnk'  # Modification du nom pour correspondre au nouveau chemin
+shortcut_path = desktop / 'Gestion_Budget.lnk'  # Modification du nom pour correspondre au nouveau chemin
 target_path = os.path.join(install_path, 'main.exe')
 
 shell = win32com.client.Dispatch("WScript.Shell")
