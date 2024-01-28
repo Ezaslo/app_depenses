@@ -1,0 +1,43 @@
+# Définit l'URL du fichier main.py sur GitHub
+$githubMainUrl = "https://raw.githubusercontent.com/Ezaslo/app_depenses/V2/main.py"
+
+# Chemin de téléchargement local
+$downloadPath = [Environment]::GetFolderPath("MyDocuments")
+
+# Télécharge le fichier main.py
+Invoke-WebRequest -Uri $githubMainUrl -OutFile "$downloadPath\main.py"
+
+# Répertoire d'installation de l'application
+$installPath = "C:\programmes\appDepenses"
+
+# Crée le répertoire d'installation s'il n'existe pas
+if (-not (Test-Path $installPath)) {
+    New-Item -Path $installPath -ItemType Directory
+}
+
+# Installation de PyInstaller (s'assurer que Python et pip sont installés et configurés)
+pip install pyinstaller
+
+# Exécute PyInstaller sur main.py pour générer l'exécutable
+& pyinstaller --onefile "$downloadPath\main.py"
+
+# Chemin du dossier de sortie PyInstaller
+$outputFolder = Join-Path $downloadPath "dist"
+
+# Copie l'exécutable dans le répertoire d'installation
+$executablePath = Join-Path $outputFolder "main.exe"
+Copy-Item -Path $executablePath -Destination $installPath
+
+# Création d'un raccourci sur le bureau
+$desktopPath = [Environment]::GetFolderPath("Desktop")
+$shortcutPath = Join-Path $desktopPath "appDepenses.lnk"
+$targetPath = Join-Path $installPath "main.exe"
+
+# Utilisation d'un script VBScript pour créer le raccourci
+$WScriptShell = New-Object -ComObject WScript.Shell
+$Shortcut = $WScriptShell.CreateShortcut($shortcutPath)
+$Shortcut.TargetPath = $targetPath
+$Shortcut.Save()
+
+Write-Host "Installation terminée et l'exécutable est sur le bureau !"
+
