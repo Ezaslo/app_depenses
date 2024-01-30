@@ -9,7 +9,7 @@ import win32com.client
 subprocess.call(['pip', 'install', 'pywin32'])
 
 # URL de votre fichier main.py dans la branche spécifique
-github_main_url = 'https://raw.githubusercontent.com/Ezaslo/app_depenses/V2/main.py'
+github_main_url = 'https://raw.githubusercontent.com/Ezaslo/app_depenses/V3/main.py'
 
 # Chemin où le code sera téléchargé
 download_path = os.path.expanduser('~')
