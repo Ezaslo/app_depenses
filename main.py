@@ -16,6 +16,7 @@ depense = 0
 
 
 
+
 def enregistrer_donnees_texte(nom_fichier):
     global salaire, prime, prelevements_globaux, argent_net, depenses_possibles, complement_revenu, depenses, argent_disponible, reserves, reserves_input
     donnees = {
@@ -287,6 +288,7 @@ def supprimer_prelevement(nom_prelevement,nom_fichier):
 
 
 def afficher_prelevements(nom_fichier):
+    total_prelevements = sum(prelevement['montant'] for prelevement in prelevements_globaux)
     if prelevements_globaux:
         print("\nListe des prélèvements :")
         print("--------------------------")
@@ -294,6 +296,7 @@ def afficher_prelevements(nom_fichier):
             print(f"Nom: {prelevement['nom'].capitalize()}, Montant: {prelevement['montant']} €")
 
         print("--------------------------")
+        print(f"\nTotal des prélèvements pour le mois  de {nom_fichier}: {total_prelevements} €")
     else:
         print("\nAucun prélèvement n'a été ajouté.")
 
@@ -316,7 +319,7 @@ def menu_depenses(nom_fichier):
             nom_depense = input("Entrez le nom de la dépense à supprimer : ").strip().lower()
             supprimer_depense(nom_depense, nom_fichier)
         elif choix == "3":
-            afficher_depenses()
+            afficher_depenses(nom_fichier)
         elif choix == "4":
             print("Retour au menu principal...")
             break
@@ -370,8 +373,9 @@ def supprimer_depense(nom_depense, nom_fichier):
         print(f"Dépense '{nom_depense}' supprimée avec succès.")
         enregistrer_donnees_texte(nom_fichier)  
 
-def afficher_depenses():
-    global depenses  
+def afficher_depenses(nom_fichier):
+    global depenses 
+    total_depenses = sum(depense['montant'] for depense in depenses)
 
  
     if not depenses:
@@ -389,6 +393,7 @@ def afficher_depenses():
         print(f"Nom de la dépense: {nom}, Montant: {montant} €")
 
     print("-------------------------------")
+    print(f"Total {nom_fichier} : {total_depenses} €")
 
 
 def remise_a_zero(nom_fichier):
@@ -507,7 +512,7 @@ def afficher_totals(nom_fichier):
     total_depenses = sum(depense['montant'] for depense in depenses)
 
     print(f"\nTotal des prélèvements pour le mois  de {nom_fichier}: {total_prelevements} €")
-    print(f"Total des dépenses pour le mois de {nom_fichier} : {total_depenses} €\n")
+    print(f"Total des dépenses pour le mois de {nom_fichier} : {total_depenses} €")
     total_entrees = salaire + prime + complement_revenu  
     print(f"Total entrées d'argent pour le mois de {nom_fichier}: {total_entrees} €")
 
