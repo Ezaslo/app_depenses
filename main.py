@@ -4,7 +4,7 @@ import json
 salaire = 0
 prime = 0
 complement_revenu = 0
-depenses = 0
+depenses = []
 argent_net = 0
 prelevements_globaux = []
 reserves_input = 0
@@ -46,7 +46,7 @@ def lire_donnees_texte(nom_fichier):
             depenses_possibles = donnees.get("depenses_possibles", 0)
             prime = donnees.get("prime", 0)
             complement_revenu = donnees.get("complement_revenu", 0)
-            depenses = donnees.get("depenses", 0)
+            depenses = donnees.get("depenses", [])
             argent_disponible = donnees.get("argent_disponible", 0)
             reserves = donnees.get("reserves", 0)
     except FileNotFoundError:
@@ -57,7 +57,7 @@ def lire_donnees_texte(nom_fichier):
         depenses_possibles = 0
         prime = 0
         complement_revenu = 0
-        depenses = 0
+        depenses = []
         argent_disponible = 0
         reserves = 0
         enregistrer_donnees_texte(nom_fichier)  
@@ -289,41 +289,106 @@ def supprimer_prelevement(nom_prelevement,nom_fichier):
 def afficher_prelevements(nom_fichier):
     if prelevements_globaux:
         print("\nListe des prélèvements :")
+        print("--------------------------")
         for prelevement in prelevements_globaux:
             print(f"Nom: {prelevement['nom'].capitalize()}, Montant: {prelevement['montant']} €")
+
+        print("--------------------------")
     else:
         print("\nAucun prélèvement n'a été ajouté.")
 
     input("\nAppuyez sur Entrée pour continuer...")
 
 
-    
-
-
-
-def calcul_depenses(nom_fichier):
-    global argent_net, prelevements_globaux ,depense,depenses
-    
+def menu_depenses(nom_fichier):
     while True:
-        argent_disponible = calculer_argent_disponible()  
-        print(f"Vous avez {argent_disponible} € de disponible.")
-        depense_input = input("Combien as-tu dépensé ? (Appuyez sur 'q' pour quitter) : ")
+        print("\nGestion des dépenses")
+        print("1. Ajouter une dépense")
+        print("2. Supprimer une dépense")
+        print("3. Afficher les dépenses")
+        print("4. Retour au menu principal")
+
+        choix = input("Choisissez une option (1-4) : ")
+
+        if choix == "1":
+            ajouter_depenses(nom_fichier)
+        elif choix == "2":
+            nom_depense = input("Entrez le nom de la dépense à supprimer : ").strip().lower()
+            supprimer_depense(nom_depense, nom_fichier)
+        elif choix == "3":
+            afficher_depenses()
+        elif choix == "4":
+            print("Retour au menu principal...")
+            break
+        else:
+            print("Option non valide. Veuillez choisir un numéro entre 1 et 4.")
+
+
+
+
+def ajouter_depenses(nom_fichier):
+ while True:
+        nom = input("Entrez le nom de la depense ou 'q' pour quitter : ").strip().lower()
         
-        if depense_input.lower() == "q":  
-            break  
-
+        if nom == "q":
+            print("Retour au menu précédent...")
+            break
+        
+        montant_str = input("Entrez le montant de la depense ou 'q' pour quitter : ").strip().lower()
+        
+        if montant_str == "q":
+            print("Retour au menu précédent...")
+            break
+        
         try:
-            depense = float(depense_input)
-            if depense <= argent_disponible:  
-                argent_net -= depense  
-                depenses += depense
-                enregistrer_donnees_texte(nom_fichier)
-            else:
-                print("Dépense refusée. Vous n'avez pas assez d'argent disponible.")
-        except ValueError:  
-            print("Entrez une valeur valide ou 'q' pour quitter.")
+            montant = float(montant_str)
+            
+            if montant < 0:
+                print("Le montant de la depense ne peut pas être négatif. Réessayez.")
+                continue  
+                
+            depenses.append({'nom': nom, 'montant': montant})
+            print(f"Depenses '{nom}' de {montant} € ajouté avec succès.")
+            enregistrer_donnees_texte(nom_fichier)
+            break
+        
+        except ValueError:
+            print("Veuillez entrer un montant valide (nombre). Réessayez.")
 
 
+def supprimer_depense(nom_depense, nom_fichier):
+    global depenses  
+    depenses_avant = depenses.copy()
+
+    
+    depenses = [depense for depense in depenses if depense['nom'].lower() != nom_depense.lower()]
+
+    
+    if len(depenses_avant) == len(depenses):
+        print(f"Aucune dépense avec le nom '{nom_depense}' trouvée.")
+    else:
+        print(f"Dépense '{nom_depense}' supprimée avec succès.")
+        enregistrer_donnees_texte(nom_fichier)  
+
+def afficher_depenses():
+    global depenses  
+
+ 
+    if not depenses:
+        print("Aucune dépense enregistrée.")
+        return
+
+
+    print("\nListe des dépenses enregistrées :")
+    print("-------------------------------")
+
+ 
+    for depense in depenses:
+        nom = depense['nom'].capitalize()  
+        montant = depense['montant']
+        print(f"Nom de la dépense: {nom}, Montant: {montant} €")
+
+    print("-------------------------------")
 
 
 def remise_a_zero(nom_fichier):
@@ -335,7 +400,7 @@ def remise_a_zero(nom_fichier):
     depenses_possibles = 0
     prelevements_globaux = []
     complement_revenu = 0
-    depenses = 0
+    depenses = []
     depense = 0
 
     print("Données réinitialisées. Bienvenue dans votre nouveau mois, ne dépensez pas trop :)")
@@ -347,7 +412,8 @@ def calculer_argent_disponible():
     global argent_net, prelevements_globaux, reserves_input
 
     total_prelevements = sum(prelevement['montant'] for prelevement in prelevements_globaux)
-    argent_disponible = argent_net - total_prelevements 
+    total_depenses = sum(depense['montant'] for depense in depenses)
+    argent_disponible = argent_net - total_prelevements - total_depenses
 
 
     return argent_disponible
@@ -438,11 +504,13 @@ def reserves_argent(nom_fichier):
 
 def afficher_totals(nom_fichier):
     total_prelevements = sum(prelevement['montant'] for prelevement in prelevements_globaux)
-    total_depenses = depenses
+    total_depenses = sum(depense['montant'] for depense in depenses)
 
-    print(f"\nTotal des prélèvements pour le mois : {total_prelevements} €")
-    print(f"Total des dépenses pour le mois : {total_depenses} €\n")
-    print(f"Total entrés d'argent pour le mois {salaire + prime + complement_revenu} €")
+    print(f"\nTotal des prélèvements pour le mois  de {nom_fichier}: {total_prelevements} €")
+    print(f"Total des dépenses pour le mois de {nom_fichier} : {total_depenses} €\n")
+    total_entrees = salaire + prime + complement_revenu  
+    print(f"Total entrées d'argent pour le mois de {nom_fichier}: {total_entrees} €")
+
 
 
 def menu(nom_fichier):
@@ -474,7 +542,7 @@ def menu(nom_fichier):
         elif choix == "3":
             calcul_objectif_argent()
         elif choix == "4":
-            calcul_depenses(nom_fichier)
+            menu_depenses(nom_fichier)
         elif choix == "5":
             remise_a_zero(nom_fichier)
         elif choix == "6":
@@ -504,7 +572,7 @@ def main():
     lire_donnees_texte(nom_fichier)
     menu(nom_fichier)
     
-    #test
+    
 
 
 if __name__ == "__main__":
