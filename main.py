@@ -473,6 +473,7 @@ def reserves_argent(nom_fichier):
         action = input("Que voulez-vous faire?\n"
                        "1. Ajouter de l'argent\n"
                        "2. Retirer de l'argent\n"
+                       "3. Definir une somme déja de coté\n"
                        "q. Quitter\n"
                        "Choisissez une option : ")
         
@@ -504,6 +505,11 @@ def reserves_argent(nom_fichier):
                 
             except ValueError:
                 print("Erreur : Veuillez entrer un montant valide.")
+        elif action =='3':
+            argent_de_cote = input("Combien d'argent avez vous deja de coté ? : ")
+            reserves = argent_de_cote
+            enregistrer_donnees_texte(nom_fichier)
+
 
 
 
