@@ -506,9 +506,12 @@ def reserves_argent(nom_fichier):
             except ValueError:
                 print("Erreur : Veuillez entrer un montant valide.")
         elif action =='3':
-            argent_de_cote = input("Combien d'argent avez vous deja de coté ? : ")
-            reserves = argent_de_cote
-            enregistrer_donnees_texte(nom_fichier)
+            try:
+                argent_de_cote = input("Combien d'argent avez vous deja de coté ? : ")
+                reserves = argent_de_cote
+                enregistrer_donnees_texte(nom_fichier)
+            except:
+                print("Entrez une valeur valide")
 
 
 
