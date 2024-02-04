@@ -470,12 +470,15 @@ def reserves_argent(nom_fichier):
     print(f"Vous avez {reserves} € de côté.")
     
     while True:
+        print(f"Votre solde de côté est de {reserves} €.")
         action = input("Que voulez-vous faire?\n"
                        "1. Ajouter de l'argent\n"
                        "2. Retirer de l'argent\n"
                        "3. Definir une somme déja de coté\n"
                        "q. Quitter\n"
                        "Choisissez une option : ")
+        
+        
         
         if action == 'q':
             break
@@ -486,7 +489,7 @@ def reserves_argent(nom_fichier):
                 reserves = reserves + reserves_input
                 argent_net = argent_net - reserves_input
             
-                print(f"Votre nouveau solde de côté est de {reserves} €.")
+                
                 enregistrer_donnees_texte(nom_fichier)
                 reserves_input = 0
             except ValueError:
@@ -507,7 +510,7 @@ def reserves_argent(nom_fichier):
                 print("Erreur : Veuillez entrer un montant valide.")
         elif action =='3':
             try:
-                argent_de_cote = input("Combien d'argent avez vous deja de coté ? : ")
+                argent_de_cote = float(input("Combien d'argent avez vous deja de coté ? : "))
                 reserves = argent_de_cote
                 enregistrer_donnees_texte(nom_fichier)
             except:
