@@ -486,7 +486,7 @@ def reserves_argent(nom_fichier):
                        "Choisissez une option : ")
         
         
-        
+        action = action.lower()
         if action == 'q':
             break
         elif action == '1':
