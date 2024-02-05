@@ -81,7 +81,7 @@ def menu_salaire(nom_fichier):
         print("2. Entrer une prime reçue")
         print("3. Entrer un complément au salaire")
         print("4. Corriger une erreur")
-        print("5. Quitter\n")
+        print("q. Quitter\n")
         try:
             argent_dispo = calculer_argent_disponible()  
             print(f"Vous avez {argent_dispo} € de disponible")
@@ -90,10 +90,16 @@ def menu_salaire(nom_fichier):
         
             continue
 
+        choix = input("Choisissez une option : ")
+
         try:
-            choix = int(input("Choisissez une catégorie : "))
+            choix = choix.lower()
+            if choix == 'q':
+                break
+            else :
+                choix = int(choix)
         except ValueError:
-            print("Veuillez entrer un nombre valide.")
+            print("Veuillez choisir une option valide. ")
             continue
 
         if choix == 1:
@@ -209,12 +215,16 @@ def menu_prelevements(nom_fichier):
         print("1. Ajouter un prélèvement")
         print("2. Supprimer un prélèvement")
         print("3. Voir les prélèvements")
-        print("4. Retour au menu principal")
+        print("q. Retour au menu principal")
 
         choix = input("Choisissez une option : ")
 
         try:
-            choix = int(choix)
+            choix = choix.lower()
+            if choix == 'q':
+                break
+            else : 
+                choix = int(choix)
 
             if choix == 1:
                 ajouter_prelevements(nom_fichier)
@@ -226,13 +236,8 @@ def menu_prelevements(nom_fichier):
                     supprimer_prelevement(nom_prelevement,nom_fichier)
             elif choix == 3:
                 afficher_prelevements(nom_fichier) 
-            elif choix == 4:
-                print("Retour au menu principal...")
-                break
-            else:
-                print("Option non valide. Veuillez choisir un nombre entre 1 et 4.")
         except ValueError:
-            print("Erreur : Vous devez entrer un nombre. Veuillez réessayer.")
+            print("Entrez une option valide. ")
 
 
 
@@ -309,9 +314,10 @@ def menu_depenses(nom_fichier):
         print("1. Ajouter une dépense")
         print("2. Supprimer une dépense")
         print("3. Afficher les dépenses")
-        print("4. Retour au menu principal")
+        print("q. Retour au menu principal")
 
         choix = input("Choisissez une option (1-4) : ")
+        choix = choix.lower()
 
         if choix == "1":
             ajouter_depenses(nom_fichier)
@@ -320,9 +326,10 @@ def menu_depenses(nom_fichier):
             supprimer_depense(nom_depense, nom_fichier)
         elif choix == "3":
             afficher_depenses(nom_fichier)
-        elif choix == "4":
+        elif choix == "q":
             print("Retour au menu principal...")
             break
+
         else:
             print("Option non valide. Veuillez choisir un numéro entre 1 et 4.")
 
@@ -526,7 +533,7 @@ def afficher_totals(nom_fichier):
     print(f"\nTotal des prélèvements pour le mois  de {nom_fichier}: {total_prelevements} €")
     print(f"Total des dépenses pour le mois de {nom_fichier} : {total_depenses} €")
     total_entrees = salaire + prime + complement_revenu  
-    print(f"Total entrées d'argent pour le mois de {nom_fichier}: {total_entrees} €")
+    print(f"Total entrées d'argent pour le mois de {nom_fichier}: {argent_net} €")
 
 
 
@@ -542,14 +549,14 @@ def menu(nom_fichier):
         print("6. Ajouter / Supprimer de l'argent de côté")
         print("7. Charger les données d'un ancien mois")
         print("8. Afficher vos prélèvements et depenses")
-        print("0. Quitter le programme\n")
+        print("q. Quitter le programme\n")
 
         argent_dispo = calculer_argent_disponible()  
         print(f"Vous avez {argent_dispo} € de disponible")
 
         choix = input("Sélectionnez une option en entrant le numéro correspondant : ")
         
-        if choix == "0":
+        if choix == "q":
             print("Merci d'avoir utilisé le programme. Au revoir !")
             break
         elif choix == "1":
@@ -569,7 +576,7 @@ def menu(nom_fichier):
         elif choix == '8':
             afficher_totals(nom_fichier)
         else:
-            print("Option non valide. Veuillez choisir une option valide (1-5) ou 0 pour quitter.")
+            print("Option non valide. Veuillez choisir une des options disponibles")
 
 
 
