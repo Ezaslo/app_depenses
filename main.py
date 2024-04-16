@@ -15,10 +15,25 @@ reserves_inputpos = 0
 depense = 0
 
 
+def sauvegarder_prelevements():
+    with open("prelevements.json", "w") as fichier:
+        json.dump(prelevements_globaux, fichier, indent=4)
+
+def charger_prelevements():
+    global prelevements_globaux
+    try:
+        with open("prelevements.json", "r") as fichier:
+            prelevements_globaux = json.load(fichier)
+    except FileNotFoundError:
+        print("Aucun fichier de prélèvements précédent trouvé. Initialisation d'une liste vide de prélèvements.")
+        prelevements_globaux = []
+
 
 
 def enregistrer_donnees_texte(nom_fichier):
     global salaire, prime, prelevements_globaux, argent_net, depenses_possibles, complement_revenu, depenses, argent_disponible, reserves, reserves_input
+
+    sauvegarder_prelevements()
     donnees = {
         "salaire": salaire,
         "prelevements_globaux": prelevements_globaux,
@@ -53,7 +68,6 @@ def lire_donnees_texte(nom_fichier):
     except FileNotFoundError:
         print("Fichier de données introuvable. Création d'un nouveau fichier.")
         salaire = 0
-        prelevements_globaux = []
         argent_net = 0
         depenses_possibles = 0
         prime = 0
@@ -61,7 +75,8 @@ def lire_donnees_texte(nom_fichier):
         depenses = []
         argent_disponible = 0
         reserves = 0
-        enregistrer_donnees_texte(nom_fichier)  
+        charger_prelevements()  # Charger les prélèvements au lieu de les réinitialiser
+        enregistrer_donnees_texte(nom_fichier)
     except json.JSONDecodeError:
         print("Erreur lors de la lecture des données. Format de fichier incorrect.")
     except Exception as e:
@@ -410,7 +425,6 @@ def remise_a_zero(nom_fichier):
     salaire = 0
     argent_net = 0
     depenses_possibles = 0
-    prelevements_globaux = []
     complement_revenu = 0
     depenses = []
     depense = 0
