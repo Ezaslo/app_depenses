@@ -595,7 +595,7 @@ def menu(nom_fichier):
 
 
 def main():
-    print("Bonjour et Bienvenue à toi\n")
+    print("----- Gestion de budget mensuel -----\n")
     
     mois_valides = ["janvier", "fevrier", "mars", "avril", "mai", "juin", "juillet", "aout", "septembre", "octobre", "novembre", "decembre"]
     
