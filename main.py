@@ -25,7 +25,6 @@ def charger_prelevements():
         with open("prelevements.json", "r") as fichier:
             prelevements_globaux = json.load(fichier)
     except FileNotFoundError:
-        print("Aucun fichier de prélèvements précédent trouvé. Initialisation d'une liste vide de prélèvements.")
         prelevements_globaux = []
 
 
@@ -66,7 +65,6 @@ def lire_donnees_texte(nom_fichier):
             argent_disponible = donnees.get("argent_disponible", 0)
             reserves = donnees.get("reserves", 0)
     except FileNotFoundError:
-        print("Fichier de données introuvable. Création d'un nouveau fichier.")
         salaire = 0
         argent_net = 0
         depenses_possibles = 0
@@ -83,7 +81,7 @@ def lire_donnees_texte(nom_fichier):
         print(f"Une erreur s'est produite lors de la lecture du fichier : {e}")
 
 def charger_donnees_mois(nom_fichier):
-    mois = input("entrez le mois des donnees à charger ex Janvier-2024")
+    mois = input("Entrer en minuscule le mois à charger : ")
     lire_donnees_texte(mois)
 
 
