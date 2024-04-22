@@ -600,7 +600,7 @@ def main():
     mois_valides = ["janvier", "fevrier", "mars", "avril", "mai", "juin", "juillet", "aout", "septembre", "octobre", "novembre", "decembre"]
     
     while True:
-        nom_fichier = input("Entrez le nom du mois en minuscule et sans accents ni ponctuation : ").strip().lower()
+        nom_fichier = input(" Entrez le mois en minuscule sans aucune ponctuation : ").strip().lower()
         
         if nom_fichier in mois_valides:
             break
