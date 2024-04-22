@@ -75,7 +75,7 @@ def lire_donnees_texte(nom_fichier):
         depenses = []
         argent_disponible = 0
         reserves = 0
-        charger_prelevements()  # Charger les prélèvements au lieu de les réinitialiser
+        charger_prelevements()  
         enregistrer_donnees_texte(nom_fichier)
     except json.JSONDecodeError:
         print("Erreur lors de la lecture des données. Format de fichier incorrect.")
@@ -555,14 +555,14 @@ def menu(nom_fichier):
     while True:
         print("\nMenu Principal\n")
         print("Options :")
-        print("1. Gérer les entrées d'argent")
-        print("2. Gérer les prélèvements")
-        print("3. Calculer des prévisions d'économies")
-        print("4. Ajouter ou supprimer une dépense")
-        print("5. Commencer un nouveau mois / Remise à zéro")
-        print("6. Ajouter / Supprimer de l'argent de côté")
-        print("7. Charger les données d'un ancien mois")
-        print("8. Afficher vos prélèvements et depenses")
+        print("1. Gérer les entrées d'argent ")
+        print("2. Gérer les prélèvements ")
+        print("3. Ajouter / Supprimer une dépense ")
+        print("4. Ajouter / Supprimer de l'argent de côté ")
+        print("5. Afficher vos prélèvements et dépenses ")
+        print("6. Faire des prévisions ")
+        print("7. Commencer un nouveau mois ")
+        print("8. Charger les données d'un ancien mois ")
         print("q. Quitter le programme\n")
 
         argent_dispo = calculer_argent_disponible()  
@@ -578,17 +578,17 @@ def menu(nom_fichier):
         elif choix == "2":
             menu_prelevements(nom_fichier)
         elif choix == "3":
-            calcul_objectif_argent()
-        elif choix == "4":
             menu_depenses(nom_fichier)
-        elif choix == "5":
-            remise_a_zero(nom_fichier)
-        elif choix == "6":
+        elif choix == "4":
             reserves_argent(nom_fichier)
-        elif choix =='7':
-            charger_donnees_mois(nom_fichier)
-        elif choix == '8':
+        elif choix == "5":
             afficher_totals(nom_fichier)
+        elif choix == "6":
+            calcul_objectif_argent()
+        elif choix =='7':
+            remise_a_zero(nom_fichier)
+        elif choix == '8':
+            charger_donnees_mois(nom_fichier)
         else:
             print("Option non valide. Veuillez choisir une des options disponibles")
 
